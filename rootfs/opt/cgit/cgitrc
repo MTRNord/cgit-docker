@@ -3,7 +3,7 @@
 root-title=Git Repository Browser
 virtual-root=/
 robots=noindex, nofollow
-clone-url=http://$HTTP_HOST$CGIT_ROOTED_PATH/$CGIT_REPO_URL ssh://git@$HTTP_HOST:2222/$CGIT_REPO_URL
+clone-url=http://$HTTP_HOST$CGIT_ROOTED_PATH/$CGIT_REPO_URL ssh://git@$SERVER_NAME:2222/$CGIT_REPO_URL
 enable-commit-graph=1
 enable-filter-overrides=1
 enable-index-links=1
