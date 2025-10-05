@@ -68,7 +68,7 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
 RUN mkdir -p /run/sshd \
     && ssh-keygen -A
 
-ENV CGIT_APP_USER=nginx
+ENV CGIT_APP_USER=gitolite3
 
 COPY ./rootfs/ /
 COPY --from=build /opt/cgit /opt/cgit
