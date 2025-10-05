@@ -62,6 +62,10 @@ RUN mkdir -p /var/lib/git/.ssh \
 RUN mkdir -p /run/sshd \
     && ssh-keygen -A
 
+# Ensure /tmp exists with proper permissions
+RUN mkdir -p /tmp \
+    && chmod 1777 /tmp
+
 ENV CGIT_APP_USER=nginx
 
 COPY ./rootfs/ /

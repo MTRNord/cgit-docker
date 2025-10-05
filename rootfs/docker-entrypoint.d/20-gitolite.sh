@@ -24,14 +24,14 @@ fi
 # Initialize Gitolite if not already initialized
 if [ ! -d "$GITOLITE_HOME/repositories" ]; then
     echo "Setting up Gitolite for the first time..."
-    su -s /bin/sh git -c "cd /tmp && export HOME='$GITOLITE_HOME' && export TMPDIR=/tmp && gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
+    su -s /bin/sh git -c "gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
     
     # Configure Gitolite to generate projects.list for cgit
     echo "Configuring Gitolite to generate projects.list for cgit..."
     su -s /bin/sh git -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_HOME/.gitolite.rc"
     
     # Generate initial projects.list
-    su -s /bin/sh git -c "export HOME='$GITOLITE_HOME' && gitolite trigger POST_COMPILE"
+    su -s /bin/sh git -c "gitolite trigger POST_COMPILE"
 else
     echo "Gitolite already initialized."
 
@@ -39,7 +39,7 @@ else
     if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
         su -s /bin/sh git -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_HOME/.gitolite.rc"
-        su -s /bin/sh git -c "export HOME='$GITOLITE_HOME' && gitolite trigger POST_COMPILE"
+        su -s /bin/sh git -c "gitolite trigger POST_COMPILE"
     fi
 fi
 
