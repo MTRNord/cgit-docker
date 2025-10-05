@@ -45,7 +45,7 @@ readme=:README.html
 # Gitolite stores repositories in /var/lib/git/repositories
 project-list=/var/lib/gitolite3/projects.list
 # Fallback to scan-path if projects.list doesn't exist yet
-scan-path=/var/lib/gitolite3/repositories/
+scan-path=/var/lib/gitolite3/repositories
 # Hide gitolite-admin from the public view
 repo.ignore=gitolite-admin
 # List of repositories can be included
