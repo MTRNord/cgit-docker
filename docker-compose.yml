@@ -1,8 +1,0 @@
-services:
-  cgit:
-    restart: always
-    container_name: cgit
-    build: .
-    ports:
-      - "8082:80"
-

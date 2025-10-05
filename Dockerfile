@@ -1,6 +1,6 @@
-ARG ALPINE_VERSION=3.20
+ARG ALPINE_VERSION=3.22
 ARG CGIT_VERSION=09d24d7cd0b7e85633f2f43808b12871bb209d69
-ARG NGINX_VERSION=1.27.2
+ARG NGINX_VERSION=1.29.1
 
 FROM alpine:${ALPINE_VERSION} AS build
 ARG CGIT_VERSION
@@ -55,4 +55,6 @@ COPY ./rootfs/ /
 COPY --from=build /opt/cgit /opt/cgit
 
 VOLUME ["/opt/git"]
-EXPOSE 80
+EXPOSE 8080
+HEALTHCHECK --interval=30s --timeout=5s --start-period=5s \
+  CMD wget -qO- http://localhost:8080/healthz || exit 1
