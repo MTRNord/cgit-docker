@@ -40,6 +40,10 @@ readme=:README.md
 readme=:README.rst
 readme=:README.txt
 readme=:README.html
+# Gitolite stores repositories in /var/lib/git/repositories
+# The symlink /opt/git points to this location
 scan-path=/opt/git/
+# Hide gitolite-admin from the public view
+repo.ignore=gitolite-admin
 # List of repositories can be included
 #include=/opt/cgit/cgitrepos

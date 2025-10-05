@@ -45,9 +45,23 @@ RUN apk add --no-cache \
     luajit \
     lua5.1-http \
     mailcap \
+    gitolite \
+    openssh-server \
+    openssh-keygen \
+    sudo \
     && ln -sf python3 /usr/bin/python \
     && python -m pip install --no-cache-dir --break-system-packages rst2html \
     && rm -rf ${HOME}/.cache/*
+
+# Create git user for Gitolite
+RUN adduser -D -h /var/lib/git -s /bin/sh git \
+    && mkdir -p /var/lib/git/.ssh \
+    && chown -R git:git /var/lib/git \
+    && chmod 700 /var/lib/git/.ssh
+
+# Setup SSH
+RUN mkdir -p /run/sshd \
+    && ssh-keygen -A
 
 ENV CGIT_APP_USER=nginx
 
@@ -55,6 +69,6 @@ COPY ./rootfs/ /
 COPY --from=build /opt/cgit /opt/cgit
 
 VOLUME ["/opt/git"]
-EXPOSE 8080
+EXPOSE 8080 22
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s \
   CMD wget -qO- http://localhost:8080/healthz || exit 1
