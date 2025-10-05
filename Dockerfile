@@ -67,7 +67,6 @@ ENV CGIT_APP_USER=nginx
 COPY ./rootfs/ /
 COPY --from=build /opt/cgit /opt/cgit
 
-VOLUME ["/var/lib/git/repositories"]
 EXPOSE 8080 2222
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s \
   CMD wget -qO- http://localhost:8080/healthz || exit 1
