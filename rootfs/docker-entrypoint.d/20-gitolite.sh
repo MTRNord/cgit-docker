@@ -2,9 +2,10 @@
 # Script to initialize Gitolite. Loaded during Docker entrypoint.
 set -eu
 
-GITOLITE_HOME=/var/lib/git
+GITOLITE_HOME=/var/lib/gitolite3
 GITOLITE_ADMIN_KEY=$GITOLITE_HOME/.ssh/admin.pub
 GITOLITE_USER=gitolite3
+GITOLITE_RC=/etc/gitolite3/gitolite.rc
 
 # Ensure /tmp exists and is writable
 mkdir -p /tmp
@@ -27,9 +28,18 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
     echo "Setting up Gitolite for the first time..."
     su -s /bin/sh $GITOLITE_USER -c "gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
     
+    # Relink .gitolite.rc to /etc/gitolite3/gitolite.rc (Debian package convention)
+    if [ -f "$GITOLITE_HOME/.gitolite.rc" ] && [ ! -L "$GITOLITE_HOME/.gitolite.rc" ]; then
+        echo "Relocating gitolite.rc to /etc/gitolite3/..."
+        mv "$GITOLITE_HOME/.gitolite.rc" "$GITOLITE_RC"
+        chown root:root "$GITOLITE_RC"
+        chmod 0644 "$GITOLITE_RC"
+        su -s /bin/sh $GITOLITE_USER -c "ln -s $GITOLITE_RC $GITOLITE_HOME/.gitolite.rc"
+    fi
+    
     # Configure Gitolite to generate projects.list for cgit
     echo "Configuring Gitolite to generate projects.list for cgit..."
-    su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_HOME/.gitolite.rc"
+    su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_RC"
     
     # Generate initial projects.list
     su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
@@ -37,9 +47,9 @@ else
     echo "Gitolite already initialized."
 
     # Ensure projects.list configuration exists
-    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_RC" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
-        su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_HOME/.gitolite.rc"
+        su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_RC"
         su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
     fi
 fi

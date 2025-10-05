@@ -33,7 +33,9 @@ FROM nginx:${NGINX_VERSION}-bookworm
 
 
 # mailcap - provides /etc/mime.types
-RUN apt-get update && apt-get install -y \
+# Pre-configure gitolite3 to skip interactive setup (we'll configure it via entrypoint script)
+RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
+    && apt-get update && apt-get install -y \
     fcgiwrap \
     git \
     git-daemon-sysvinit \
@@ -50,10 +52,13 @@ RUN apt-get update && apt-get install -y \
     sudo \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf python3 /usr/bin/python \
-    && python3 -m pip install --break-system-packages rst2html
-
-# Configure git user for Gitolite (user already created by gitolite3 package)
-RUN mkdir -p /var/lib/gitolite3/.ssh \
+    && python3 -m pip install --break-system-packages rst2html \
+    && if ! getent passwd gitolite3 >/dev/null; then \
+        adduser --quiet --system --home /var/lib/gitolite3 --shell /bin/bash \
+            --no-create-home --gecos 'git repository hosting' \
+            --group gitolite3; \
+    fi \
+    && mkdir -p /var/lib/gitolite3/.ssh /etc/gitolite3 \
     && chown -R gitolite3:gitolite3 /var/lib/gitolite3 \
     && chmod 700 /var/lib/gitolite3/.ssh \
     && ln -s /var/lib/gitolite3 /var/lib/git
