@@ -7,7 +7,7 @@ echo "Starting SSH daemon for Gitolite..."
 # Configure SSH for Gitolite
 cat > /etc/ssh/sshd_config << 'EOF'
 # SSH configuration for Gitolite
-Port 22
+Port 2222
 PermitRootLogin no
 PubkeyAuthentication yes
 PasswordAuthentication no
