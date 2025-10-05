@@ -3,7 +3,7 @@
 set -eu
 
 GITOLITE_HOME=/var/lib/git
-GITOLITE_ADMIN_KEY=/var/lib/git/.ssh/admin.pub
+GITOLITE_ADMIN_KEY=$GITOLITE_HOME/.ssh/admin.pub
 
 echo "Initializing Gitolite..."
 
@@ -11,11 +11,10 @@ echo "Initializing Gitolite..."
 if [ ! -f "$GITOLITE_ADMIN_KEY" ]; then
     echo "No admin SSH key found. Creating a default one..."
     echo "WARNING: Using default admin key. Please replace with your own key!"
-    ssh-keygen -t rsa -b 4096 -f /var/lib/git/.ssh/admin -N "" -C "gitolite-admin@docker"
-    cp /var/lib/git/.ssh/admin.pub "$GITOLITE_ADMIN_KEY"
-    chown git:git /var/lib/git/.ssh/admin*
-    chmod 600 /var/lib/git/.ssh/admin
-    chmod 644 /var/lib/git/.ssh/admin.pub
+    ssh-keygen -t rsa -b 4096 -f $GITOLITE_HOME/.ssh/admin -N "" -C "gitolite-admin@docker"
+    chown git:git $GITOLITE_HOME/.ssh/admin*
+    chmod 600 $GITOLITE_HOME/.ssh/admin
+    chmod 644 $GITOLITE_HOME/.ssh/admin.pub
 fi
 
 # Initialize Gitolite if not already initialized
