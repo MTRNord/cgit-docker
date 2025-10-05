@@ -53,7 +53,7 @@ else
     # Ensure projects.list configuration exists (run as root since file is owned by root)
     if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_RC" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
-        sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_RC"
+        sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_HOME/.gitolite.rc"
         su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
     fi
 fi
