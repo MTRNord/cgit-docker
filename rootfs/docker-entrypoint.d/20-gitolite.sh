@@ -32,21 +32,12 @@ if [ ! -d "$GITOLITE_HOME/repositories/gitolite-admin.git" ]; then
     
     su -s /bin/sh $GITOLITE_USER -c "gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
     
-    # Relink .gitolite.rc to /etc/gitolite3/gitolite.rc (Debian package convention)
-    if [ -f "$GITOLITE_HOME/.gitolite.rc" ] && [ ! -L "$GITOLITE_HOME/.gitolite.rc" ]; then
-        echo "Relocating gitolite.rc to /etc/gitolite3/..."
-        mv "$GITOLITE_HOME/.gitolite.rc" "$GITOLITE_RC"
-        chown root:root "$GITOLITE_RC"
-        chmod 0644 "$GITOLITE_RC"
-        su -s /bin/sh $GITOLITE_USER -c "ln -s $GITOLITE_RC $GITOLITE_HOME/.gitolite.rc"
-    fi
-    
     # Configure Gitolite to generate projects.list for cgit (run as root since file is owned by root)
     echo "Configuring Gitolite to generate projects.list for cgit..."
     sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_RC"
     
     # Generate initial projects.list (run as gitolite3 user)
-    su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
+    su -s /bin/sh $GITOLITE_USER -c "gitolite setup"
 else
     echo "Gitolite already initialized."
 
@@ -54,7 +45,7 @@ else
     if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_RC" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
         sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_HOME/.gitolite.rc"
-        su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
+        su -s /bin/sh $GITOLITE_USER -c "gitolite setup"
     fi
 fi
 
