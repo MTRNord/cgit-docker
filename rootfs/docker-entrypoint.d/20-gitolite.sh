@@ -37,19 +37,19 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
         su -s /bin/sh $GITOLITE_USER -c "ln -s $GITOLITE_RC $GITOLITE_HOME/.gitolite.rc"
     fi
     
-    # Configure Gitolite to generate projects.list for cgit
+    # Configure Gitolite to generate projects.list for cgit (run as root since file is owned by root)
     echo "Configuring Gitolite to generate projects.list for cgit..."
-    su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_RC"
+    sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => '\''$ENV{HOME}/projects.list'\'',' "$GITOLITE_RC"
     
-    # Generate initial projects.list
+    # Generate initial projects.list (run as gitolite3 user)
     su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
 else
     echo "Gitolite already initialized."
 
-    # Ensure projects.list configuration exists
+    # Ensure projects.list configuration exists (run as root since file is owned by root)
     if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_RC" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
-        su -s /bin/sh $GITOLITE_USER -c "sed -i '/^%RC = (/a\\    GITWEB_PROJECTS_LIST => '\''\$ENV{HOME}/projects.list'\'',' $GITOLITE_RC"
+        sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => '\''$ENV{HOME}/projects.list'\'',' "$GITOLITE_RC"
         su -s /bin/sh $GITOLITE_USER -c "gitolite trigger POST_COMPILE"
     fi
 fi
