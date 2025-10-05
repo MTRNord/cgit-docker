@@ -22,12 +22,6 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
     echo "Setting up Gitolite for the first time..."
     su git -c "gitolite setup -pk $GITOLITE_ADMIN_KEY"
     
-    # Create symlink from repositories to /opt/git for cgit
-    if [ ! -L "/opt/git" ]; then
-        rm -rf /opt/git
-        ln -sf $GITOLITE_HOME/repositories /opt/git
-    fi
-    
     # Configure Gitolite to generate projects.list for cgit
     # This file will list all repositories that should be publicly visible
     echo "Configuring Gitolite to generate projects.list for cgit..."
@@ -37,12 +31,7 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
     su git -c "gitolite trigger POST_COMPILE"
 else
     echo "Gitolite already initialized."
-    # Ensure symlink exists
-    if [ ! -L "/opt/git" ]; then
-        rm -rf /opt/git
-        ln -sf $GITOLITE_HOME/repositories /opt/git
-    fi
-    
+
     # Ensure projects.list configuration exists
     if ! grep -q "GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."

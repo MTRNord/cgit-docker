@@ -43,7 +43,7 @@ docker run -d \
   cgit-gitolite
 ```
 
-The Cgit `scan-path` configuration parameter is set to read repositories from the `/opt/git` path. That path can be mounted as a volume if needed.
+The Cgit `scan-path` configuration parameter is set to read repositories from the `/var/lib/git/repositories` path. That path can be mounted as a volume if needed.
 
 ## SSH Host Keys
 
