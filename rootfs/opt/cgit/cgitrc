@@ -33,7 +33,17 @@ cache-root-ttl=10
 cache-scanrc-ttl=10
 cache-static-ttl=10
 
+# Mimetypes
+mimetype.gif=image/gif
+mimetype.html=text/html
+mimetype.jpg=image/jpeg
+mimetype.jpeg=image/jpeg
+mimetype.pdf=application/pdf
+mimetype.png=image/png
+mimetype.svg=image/svg+xml
+
 # Repos
+snapshots=tar.gz tar.xz
 remove-suffix=1
 enable-git-config=1
 # requires python-markdown

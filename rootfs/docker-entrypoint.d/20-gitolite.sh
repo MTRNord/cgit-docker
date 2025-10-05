@@ -5,7 +5,6 @@ set -eu
 GITOLITE_HOME=/var/lib/gitolite3
 GITOLITE_ADMIN_KEY=$GITOLITE_HOME/.ssh/admin.pub
 GITOLITE_USER=gitolite3
-GITOLITE_RC=/etc/gitolite3/gitolite.rc
 
 # Ensure /tmp exists and is writable
 mkdir -p /tmp
