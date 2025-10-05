@@ -68,6 +68,24 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
 RUN mkdir -p /run/sshd \
     && ssh-keygen -A
 
+# Configure global git settings
+RUN git config --system init.defaultBranch main \
+    && git config --system pull.rebase true \
+    && git config --system core.autocrlf input \
+    && git config --system merge.conflictStyle zdiff3 \
+    && git config --system column.ui auto \
+    && git config --system diff.algorithm histogram \
+    && git config --system diff.colorMoved plain \
+    && git config --system diff.mnemonicPrefix true \
+    && git config --system diff.renames true \
+    && git config --system branch.sort -committerdate \
+    && git config --system rebase.autosquash true \
+    && git config --system rebase.autostash true \
+    && git config --system rebase.updateRefs true \
+    && git config --system rerere.enabled true \
+    && git config --system rerere.autoupdate true \
+    && git config --system help.autocorrect prompt
+
 ENV CGIT_APP_USER=gitolite3
 
 COPY ./rootfs/ /
