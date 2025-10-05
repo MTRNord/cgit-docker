@@ -22,6 +22,8 @@ if [ ! -d "$GITOLITE_HOME/repositories/gitolite-admin.git" ]; then
     if [ ! -f "$GITOLITE_ADMIN_KEY" ]; then
         echo "No admin SSH key found. Creating a default one..."
         echo "WARNING: Using default admin key. Please replace with your own key!"
+        mkdir -p $GITOLITE_HOME/.ssh
+        chown $GITOLITE_USER:$GITOLITE_USER $GITOLITE_HOME/.ssh/
         ssh-keygen -t rsa -b 4096 -f $GITOLITE_HOME/.ssh/admin -N "" -C "gitolite-admin@docker"
         chown $GITOLITE_USER:$GITOLITE_USER $GITOLITE_HOME/.ssh/admin*
         chmod 600 $GITOLITE_HOME/.ssh/admin
