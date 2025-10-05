@@ -53,9 +53,8 @@ RUN apk add --no-cache \
     && python -m pip install --no-cache-dir --break-system-packages rst2html \
     && rm -rf ${HOME}/.cache/*
 
-# Create git user for Gitolite
-RUN adduser -D -h /var/lib/git -s /bin/sh git \
-    && mkdir -p /var/lib/git/.ssh \
+# Configure git user for Gitolite (user already created by gitolite package)
+RUN mkdir -p /var/lib/git/.ssh \
     && chown -R git:git /var/lib/git \
     && chmod 700 /var/lib/git/.ssh
 
