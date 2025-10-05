@@ -33,8 +33,17 @@ if [ ! -d "$GITOLITE_HOME/repositories/gitolite-admin.git" ]; then
     su -s /bin/sh $GITOLITE_USER -c "gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
     
     # Configure Gitolite to generate projects.list for cgit (run as root since file is owned by root)
-    echo "Configuring Gitolite to generate projects.list for cgit..."
-    sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_RC"
+    # Only add if not already present
+    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+        echo "Configuring Gitolite to generate projects.list for cgit..."
+        sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_HOME/.gitolite.rc"
+    fi
+
+    # Configure GIT_CONFIG_KEYS to allow setting git config values
+    if ! grep -q "^[[:space:]]*GIT_CONFIG_KEYS.*core\.\*" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+        echo "Configuring GIT_CONFIG_KEYS for Gitolite..."
+        sed -i "s/^\([[:space:]]*\)GIT_CONFIG_KEYS[[:space:]]*=>[[:space:]]*'',/\1GIT_CONFIG_KEYS => 'gitweb\..*',/" "$GITOLITE_HOME/.gitolite.rc"
+    fi
     
     # Generate initial projects.list (run as gitolite3 user)
     su -s /bin/sh $GITOLITE_USER -c "gitolite setup"
@@ -42,11 +51,18 @@ else
     echo "Gitolite already initialized."
 
     # Ensure projects.list configuration exists (run as root since file is owned by root)
-    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_RC" 2>/dev/null; then
+    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
         sed -i '/^%RC = (/a\    GITWEB_PROJECTS_LIST => "$ENV{HOME}/projects.list",' "$GITOLITE_HOME/.gitolite.rc"
-        su -s /bin/sh $GITOLITE_USER -c "gitolite setup"
     fi
+
+    # Configure GIT_CONFIG_KEYS to allow setting git config values
+    if ! grep -q "^[[:space:]]*GIT_CONFIG_KEYS.*core\.\*" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+        echo "Configuring GIT_CONFIG_KEYS for Gitolite..."
+        sed -i "s/^\([[:space:]]*\)GIT_CONFIG_KEYS[[:space:]]*=>[[:space:]]*'',/\1GIT_CONFIG_KEYS => 'gitweb\..*',/" "$GITOLITE_HOME/.gitolite.rc"
+    fi
+    
+    su -s /bin/sh $GITOLITE_USER -c "gitolite setup"
 fi
 
 # Ensure projects.list is readable by nginx (for cgit)
