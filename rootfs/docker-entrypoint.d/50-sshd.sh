@@ -4,6 +4,11 @@ set -eu
 
 echo "Starting SSH daemon for Gitolite..."
 
+# Ensure gitolite3 and git users are unlocked (system users are locked by default)
+# Set password to '*' which allows login but not via password authentication
+usermod -p '*' gitolite3
+usermod -p '*' git
+
 # Configure SSH for Gitolite
 cat > /etc/ssh/sshd_config << 'EOF'
 LogLevel INFO
