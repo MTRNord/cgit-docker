@@ -28,16 +28,17 @@ if ! groups ${CGIT_APP_USER} | grep -q $GITOLITE_USER; then
     echo "Added ${CGIT_APP_USER} to $GITOLITE_USER group for repository access"
 fi
 
-# Ensure git home directory is accessible
+# Ensure git home directory is accessible (both symlink and actual directory)
 chmod 755 /var/lib/git
+chmod 755 /var/lib/gitolite3
 
 # Ensure repositories are readable by the gitolite3 group
-if [ -d /var/lib/git/repositories ]; then
-    chown -R $GITOLITE_USER:$GITOLITE_USER /var/lib/git/repositories
+if [ -d /var/lib/gitolite3/repositories ]; then
+    chown -R $GITOLITE_USER:$GITOLITE_USER /var/lib/gitolite3/repositories
     # Directories: owner can write, group can read/execute (traverse)
-    find /var/lib/git/repositories -type d -exec chmod 750 {} \;
+    find /var/lib/gitolite3/repositories -type d -exec chmod 750 {} \;
     # Files: owner can write, group can read
-    find /var/lib/git/repositories -type f -exec chmod 640 {} \;
+    find /var/lib/gitolite3/repositories -type f -exec chmod 640 {} \;
     echo "Set read permissions for ${CGIT_APP_USER} on repositories"
 fi
 

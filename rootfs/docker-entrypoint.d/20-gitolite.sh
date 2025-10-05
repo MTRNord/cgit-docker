@@ -56,6 +56,12 @@ fi
 
 # Fix permissions
 chown -R $GITOLITE_USER:$GITOLITE_USER $GITOLITE_HOME
+# Ensure home directory is traversable by group members (nginx needs to access repositories)
+chmod 755 $GITOLITE_HOME
+# Ensure repositories directory is traversable
+if [ -d "$GITOLITE_HOME/repositories" ]; then
+    chmod 755 "$GITOLITE_HOME/repositories"
+fi
 
 echo "Gitolite initialization complete."
 
