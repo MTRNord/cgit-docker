@@ -23,9 +23,8 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
     su git -c "gitolite setup -pk $GITOLITE_ADMIN_KEY"
     
     # Configure Gitolite to generate projects.list for cgit
-    # This file will list all repositories that should be publicly visible
     echo "Configuring Gitolite to generate projects.list for cgit..."
-    su git -c "echo 'GITWEB_PROJECTS_LIST = \$ENV{HOME}/projects.list' >> $GITOLITE_HOME/.gitolite.rc"
+    su git -c "sed -i \"s|# GITWEB_PROJECTS_LIST.*|GITWEB_PROJECTS_LIST => '\\\$ENV{HOME}/projects.list',|\" $GITOLITE_HOME/.gitolite.rc"
     
     # Generate initial projects.list
     su git -c "gitolite trigger POST_COMPILE"
@@ -33,9 +32,9 @@ else
     echo "Gitolite already initialized."
 
     # Ensure projects.list configuration exists
-    if ! grep -q "GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+    if ! grep -q "^[[:space:]]*GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
         echo "Adding projects.list configuration to Gitolite..."
-        su git -c "echo 'GITWEB_PROJECTS_LIST = \$ENV{HOME}/projects.list' >> $GITOLITE_HOME/.gitolite.rc"
+        su git -c "sed -i \"s|# GITWEB_PROJECTS_LIST.*|GITWEB_PROJECTS_LIST => '\\\$ENV{HOME}/projects.list',|\" $GITOLITE_HOME/.gitolite.rc"
         su git -c "gitolite trigger POST_COMPILE"
     fi
 fi

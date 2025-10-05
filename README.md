@@ -43,7 +43,7 @@ docker run -d \
   cgit-gitolite
 ```
 
-The Cgit `scan-path` configuration parameter is set to read repositories from the `/var/lib/git/repositories` path. That path can be mounted as a volume if needed.
+The Cgit configuration uses Gitolite's `projects.list` file for repository discovery, with a fallback to scanning `/var/lib/git/repositories` if the projects.list doesn't exist yet.
 
 ## SSH Host Keys
 
@@ -191,11 +191,18 @@ docker run -d \
 
 ### Viewing Repositories in Cgit
 
-All repositories managed by Gitolite will automatically appear in Cgit at `http://localhost:8080`. The gitolite-admin repository is visible by default but can be hidden by uncommenting the line in `/opt/cgit/cgitrc`:
+All repositories managed by Gitolite will automatically appear in Cgit at `http://localhost:8080`. 
+
+**Repository Discovery:** Cgit uses Gitolite's `projects.list` file (`/var/lib/git/projects.list`) to discover repositories. This ensures that only repositories that Gitolite has marked as publicly visible will appear in Cgit. If a repository doesn't appear, check that it's properly configured in your `gitolite.conf` file.
+
+By default, the gitolite-admin repository is visible. To hide it, add this to your `conf/gitolite.conf` in the gitolite-admin repository:
 
 ```
-repo.ignore=gitolite-admin
+repo gitolite-admin
+    config gitweb.deny = true
 ```
+
+Then commit and push the changes.
 
 ## References
 
