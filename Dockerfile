@@ -61,7 +61,8 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     && mkdir -p /var/lib/gitolite3/.ssh /etc/gitolite3 \
     && chown -R gitolite3:gitolite3 /var/lib/gitolite3 \
     && chmod 700 /var/lib/gitolite3/.ssh \
-    && ln -s /var/lib/gitolite3 /var/lib/git
+    && ln -s /var/lib/gitolite3 /var/lib/git \
+    && useradd -d /var/lib/gitolite3 -s /bin/bash -g gitolite3 -o -u $(id -u gitolite3) git
 
 # Setup SSH
 RUN mkdir -p /run/sshd \

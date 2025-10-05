@@ -26,7 +26,7 @@ PubkeyAcceptedAlgorithms sk-ssh-ed25519-cert-v01@openssh.com,ssh-ed25519-cert-v0
 
 UsePAM no
 PermitRootLogin no
-AllowUsers gitolite3
+AllowUsers gitolite3 git
 PubkeyAuthentication yes
 PasswordAuthentication no
 ChallengeResponseAuthentication no
