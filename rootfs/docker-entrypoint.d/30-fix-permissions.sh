@@ -2,6 +2,8 @@
 # Script to fix file permissions. Loaded during Docker entrypoint.
 set -eu
 
+GITOLITE_USER=gitolite3
+
 # Fix cgit permissions
 chown -R ${CGIT_APP_USER}:${CGIT_APP_USER} /opt/cgit/ \
                      /run/fcgiwrap/
@@ -14,21 +16,21 @@ chmod 770 /opt/cgit/ \
 chmod u+x /opt/cgit/app/cgit.cgi
 
 # Fix git/gitolite permissions
-chown -R git:git /var/lib/git/
+chown -R $GITOLITE_USER:$GITOLITE_USER /var/lib/git/
 
 # Give nginx user read access to git repositories for cgit
-# We do this by adding nginx to the git group
-if ! groups ${CGIT_APP_USER} | grep -q git; then
-    addgroup ${CGIT_APP_USER} git
-    echo "Added ${CGIT_APP_USER} to git group for repository access"
+# We do this by adding nginx to the gitolite3 group
+if ! groups ${CGIT_APP_USER} | grep -q $GITOLITE_USER; then
+    usermod -a -G $GITOLITE_USER ${CGIT_APP_USER}
+    echo "Added ${CGIT_APP_USER} to $GITOLITE_USER group for repository access"
 fi
 
 # Ensure git home directory is accessible
 chmod 755 /var/lib/git
 
-# Ensure repositories are readable by the git group
+# Ensure repositories are readable by the gitolite3 group
 if [ -d /var/lib/git/repositories ]; then
-    chown -R git:git /var/lib/git/repositories
+    chown -R $GITOLITE_USER:$GITOLITE_USER /var/lib/git/repositories
     # Directories: owner can write, group can read/execute (traverse)
     find /var/lib/git/repositories -type d -exec chmod 750 {} \;
     # Files: owner can write, group can read
