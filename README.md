@@ -45,6 +45,60 @@ docker run -d \
 
 The Cgit `scan-path` configuration parameter is set to read repositories from the `/opt/git` path. That path can be mounted as a volume if needed.
 
+## SSH Host Keys
+
+By default, SSH host keys are generated on first container start. This means the host key will change if you recreate the container, causing SSH warnings.
+
+### Setting Up Persistent SSH Host Keys
+
+For production use, you should persist SSH host keys across container restarts:
+
+**Quick method:** Use the provided script:
+
+```bash
+./generate-ssh-host-keys.sh
+```
+
+This will generate all necessary host keys in the `./ssh-host-keys` directory and show you the exact Docker command to use.
+
+**Manual method:**
+
+1. **Generate SSH host keys locally** (one time):
+
+```bash
+mkdir -p ./ssh-host-keys
+ssh-keygen -t rsa -f ./ssh-host-keys/ssh_host_rsa_key -N ""
+ssh-keygen -t ecdsa -f ./ssh-host-keys/ssh_host_ecdsa_key -N ""
+ssh-keygen -t ed25519 -f ./ssh-host-keys/ssh_host_ed25519_key -N ""
+```
+
+2. **Mount the host keys when running the container**:
+
+```bash
+docker run -d \
+  --name cgit \
+  -p 8080:8080 \
+  -p 2222:22 \
+  -v gitolite-data:/var/lib/git \
+  -v $(pwd)/ssh-host-keys/ssh_host_rsa_key:/etc/ssh/ssh_host_rsa_key:ro \
+  -v $(pwd)/ssh-host-keys/ssh_host_rsa_key.pub:/etc/ssh/ssh_host_rsa_key.pub:ro \
+  -v $(pwd)/ssh-host-keys/ssh_host_ecdsa_key:/etc/ssh/ssh_host_ecdsa_key:ro \
+  -v $(pwd)/ssh-host-keys/ssh_host_ecdsa_key.pub:/etc/ssh/ssh_host_ecdsa_key.pub:ro \
+  -v $(pwd)/ssh-host-keys/ssh_host_ed25519_key:/etc/ssh/ssh_host_ed25519_key:ro \
+  -v $(pwd)/ssh-host-keys/ssh_host_ed25519_key.pub:/etc/ssh/ssh_host_ed25519_key.pub:ro \
+  cgit-gitolite
+```
+
+3. **Verify the host key fingerprint**:
+
+```bash
+ssh-keygen -lf ./ssh-host-keys/ssh_host_ed25519_key.pub
+```
+
+Now your SSH host keys will remain consistent across container restarts, and users won't see "host key changed" warnings.
+
+**Security Note:** Keep these host keys secure and backed up. If compromised, regenerate them and inform all users of the new fingerprints.
+
 ## Gitolite Integration
 
 This image includes Gitolite for Git repository management with SSH access control.
