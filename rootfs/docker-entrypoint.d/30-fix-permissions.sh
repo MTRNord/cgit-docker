@@ -42,8 +42,8 @@ if [ -d /var/lib/git/repositories ]; then
 fi
 
 # Ensure projects.list is readable
-if [ -f /var/lib/git/projects.list ]; then
-    chmod 644 /var/lib/git/projects.list
+if [ -f /var/lib/gitolite3/projects.list ]; then
+    chmod 644 /var/lib/gitolite3/projects.list
     echo "Made projects.list readable for cgit"
 fi
 

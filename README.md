@@ -193,7 +193,7 @@ docker run -d \
 
 All repositories managed by Gitolite will automatically appear in Cgit at `http://localhost:8080`.
 
-**Repository Discovery:** Cgit uses Gitolite's `projects.list` file (`/var/lib/git/projects.list`) to discover repositories. This ensures that only repositories that Gitolite has marked as publicly visible will appear in Cgit. If a repository doesn't appear, check that it's properly configured in your `gitolite.conf` file.
+**Repository Discovery:** Cgit uses Gitolite's `projects.list` file (`/var/lib/gitolite3/projects.list`) to discover repositories. This ensures that only repositories that Gitolite has marked as publicly visible will appear in Cgit. If a repository doesn't appear, check that it's properly configured in your `gitolite.conf` file.
 
 By default, the gitolite-admin repository is visible. To hide it, add this to your `conf/gitolite.conf` in the gitolite-admin repository:
 
