@@ -13,19 +13,21 @@ chmod 1777 /tmp
 
 echo "Initializing Gitolite..."
 
-# Check if admin key exists, if not create a default one
-if [ ! -f "$GITOLITE_ADMIN_KEY" ]; then
-    echo "No admin SSH key found. Creating a default one..."
-    echo "WARNING: Using default admin key. Please replace with your own key!"
-    ssh-keygen -t rsa -b 4096 -f $GITOLITE_HOME/.ssh/admin -N "" -C "gitolite-admin@docker"
-    chown $GITOLITE_USER:$GITOLITE_USER $GITOLITE_HOME/.ssh/admin*
-    chmod 600 $GITOLITE_HOME/.ssh/admin
-    chmod 644 $GITOLITE_HOME/.ssh/admin.pub
-fi
-
 # Initialize Gitolite if not already initialized
-if [ ! -d "$GITOLITE_HOME/repositories" ]; then
+# Check for gitolite-admin.git as the definitive indicator of setup completion
+if [ ! -d "$GITOLITE_HOME/repositories/gitolite-admin.git" ]; then
     echo "Setting up Gitolite for the first time..."
+    
+    # Check if admin key exists, if not create a default one
+    if [ ! -f "$GITOLITE_ADMIN_KEY" ]; then
+        echo "No admin SSH key found. Creating a default one..."
+        echo "WARNING: Using default admin key. Please replace with your own key!"
+        ssh-keygen -t rsa -b 4096 -f $GITOLITE_HOME/.ssh/admin -N "" -C "gitolite-admin@docker"
+        chown $GITOLITE_USER:$GITOLITE_USER $GITOLITE_HOME/.ssh/admin*
+        chmod 600 $GITOLITE_HOME/.ssh/admin
+        chmod 644 $GITOLITE_HOME/.ssh/admin.pub
+    fi
+    
     su -s /bin/sh $GITOLITE_USER -c "gitolite setup -pk '$GITOLITE_ADMIN_KEY'"
     
     # Relink .gitolite.rc to /etc/gitolite3/gitolite.rc (Debian package convention)
