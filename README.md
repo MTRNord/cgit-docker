@@ -45,6 +45,7 @@ The Cgit `scan-path` configuration parameter is set to read repositories from th
 ```
 
 ## How To add Basic Auth and allow push
+
 This example show how to add basic auth (and allow push changes) to you cgit server.
 
 ```sh
@@ -64,6 +65,7 @@ echo "CHANGED" >> /tmp/nginx-cloned/README.md
 ```
 
 ## References
+
 * [Cgit README](https://git.zx2c4.com/cgit/tree/README)
 * [Cgit configuration](https://git.zx2c4.com/cgit/tree/cgitrc.5.txt)
 * [cgit - ArchWiki](https://wiki.archlinux.org/title/Cgit)
