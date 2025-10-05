@@ -28,6 +28,14 @@ if [ ! -d "$GITOLITE_HOME/repositories" ]; then
         rm -rf /opt/git
         ln -sf $GITOLITE_HOME/repositories /opt/git
     fi
+    
+    # Configure Gitolite to generate projects.list for cgit
+    # This file will list all repositories that should be publicly visible
+    echo "Configuring Gitolite to generate projects.list for cgit..."
+    su git -c "echo 'GITWEB_PROJECTS_LIST = \$ENV{HOME}/projects.list' >> $GITOLITE_HOME/.gitolite.rc"
+    
+    # Generate initial projects.list
+    su git -c "gitolite trigger POST_COMPILE"
 else
     echo "Gitolite already initialized."
     # Ensure symlink exists
@@ -35,6 +43,18 @@ else
         rm -rf /opt/git
         ln -sf $GITOLITE_HOME/repositories /opt/git
     fi
+    
+    # Ensure projects.list configuration exists
+    if ! grep -q "GITWEB_PROJECTS_LIST" "$GITOLITE_HOME/.gitolite.rc" 2>/dev/null; then
+        echo "Adding projects.list configuration to Gitolite..."
+        su git -c "echo 'GITWEB_PROJECTS_LIST = \$ENV{HOME}/projects.list' >> $GITOLITE_HOME/.gitolite.rc"
+        su git -c "gitolite trigger POST_COMPILE"
+    fi
+fi
+
+# Ensure projects.list is readable by nginx (for cgit)
+if [ -f "$GITOLITE_HOME/projects.list" ]; then
+    chmod 644 "$GITOLITE_HOME/projects.list"
 fi
 
 # Fix permissions

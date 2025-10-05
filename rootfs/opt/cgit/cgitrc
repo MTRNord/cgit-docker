@@ -44,7 +44,11 @@ readme=:README.txt
 readme=:README.html
 # Gitolite stores repositories in /var/lib/git/repositories
 # The symlink /opt/git points to this location
-scan-path=/opt/git/
+# Use Gitolite's projects.list instead of scan-path for better performance
+# and to respect Gitolite's access control
+project-list=/var/lib/git/projects.list
+# Fallback to scan-path if projects.list doesn't exist yet
+scan-path=/var/lib/git/repositories/
 # Hide gitolite-admin from the public view
 repo.ignore=gitolite-admin
 # List of repositories can be included
