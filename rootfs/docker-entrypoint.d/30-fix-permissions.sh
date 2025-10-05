@@ -4,10 +4,6 @@ set -eu
 
 GITOLITE_USER=gitolite3
 
-# Fix cgit permissions
-chown -R ${CGIT_APP_USER}:${CGIT_APP_USER} /opt/cgit/ \
-                     /run/fcgiwrap/
-
 chmod 770 /opt/cgit/ \
           /opt/cgit/filters/ \
           /opt/cgit/app/ \
