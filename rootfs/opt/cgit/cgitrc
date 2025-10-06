@@ -1,6 +1,6 @@
 # cigit documentation: https://git.zx2c4.com/cgit/tree/cgitrc.5.txt
 # General
-root-title=Git Repository Browser
+root-title=MTRNord git repositories 
 virtual-root=/
 robots=noindex, nofollow
 clone-url=https://git.midnightthoughts.space$CGIT_ROOTED_PATH/$CGIT_REPO_URL git@git.midnightthoughts.space/$CGIT_REPO_URL
@@ -32,6 +32,7 @@ cache-repo-ttl=10
 cache-root-ttl=10
 cache-scanrc-ttl=10
 cache-static-ttl=10
+cache-snapshot-ttl=10
 
 # Mimetypes
 mimetype.gif=image/gif
