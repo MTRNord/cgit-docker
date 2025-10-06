@@ -84,7 +84,8 @@ RUN git config --system init.defaultBranch main \
     && git config --system rebase.updateRefs true \
     && git config --system rerere.enabled true \
     && git config --system rerere.autoupdate true \
-    && git config --system help.autocorrect prompt
+    && git config --system help.autocorrect prompt \
+    && git config --system receive.fsckObjects true
 
 ENV CGIT_APP_USER=gitolite3
 
