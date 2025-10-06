@@ -30,7 +30,7 @@ cache-root=/opt/cgit/cache
 cache-dynamic-ttl=5
 cache-repo-ttl=5
 cache-root-ttl=5
-cache-scanrc-ttl=15
+cache-scanrc-ttl=5
 cache-static-ttl=5
 cache-snapshot-ttl=5
 
