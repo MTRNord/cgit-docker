@@ -50,6 +50,9 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     gitolite3 \
     openssh-server \
     sudo \
+    curl \
+    nano \
+    wget \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf python3 /usr/bin/python \
     && python3 -m pip install --break-system-packages rst2html \
