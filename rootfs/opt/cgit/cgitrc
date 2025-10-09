@@ -52,6 +52,7 @@ readme=:README.md
 # requires rst2html
 readme=:README.rst
 readme=:README.txt
+readme=:README
 readme=:README.html
 # Gitolite stores repositories in /var/lib/git/repositories
 project-list=/var/lib/gitolite3/projects.list
