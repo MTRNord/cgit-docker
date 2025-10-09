@@ -1,5 +1,5 @@
 ARG DEBIAN_VERSION=bookworm
-ARG CGIT_VERSION=09d24d7cd0b7e85633f2f43808b12871bb209d69
+ARG CGIT_VERSION=fd2db11024256d37076540786022f2fcd1654141
 ARG NGINX_VERSION=1.29.1
 
 FROM debian:${DEBIAN_VERSION} AS build
@@ -21,7 +21,7 @@ RUN apt-get update && apt-get install -y \
 
 
 WORKDIR /opt/cgit-repo
-RUN git clone https://git.zx2c4.com/cgit . \
+RUN git clone https://git.midnightthoughts.space/cgit . \
  && git checkout ${CGIT_VERSION} \
  && git submodule update --init --recursive
 
