@@ -22,6 +22,7 @@ RUN apt-get update && apt-get install -y \
     pkg-config \
     ninja-build \
     libgit2-dev \
+    libfcgi-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -55,6 +56,7 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     openssh-server \
     sudo \
     curl \
+    libfcgi-bin \
     nano \
     wget \
     libgit2-1.9 \
