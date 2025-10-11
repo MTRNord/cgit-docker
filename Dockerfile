@@ -43,7 +43,6 @@ FROM nginx:${NGINX_VERSION}-trixie
 # Pre-configure gitolite3 to skip interactive setup (we'll configure it via entrypoint script)
 RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     && apt-get update && apt-get install -y \
-    fcgiwrap \
     git \
     groff \
     python3 \
