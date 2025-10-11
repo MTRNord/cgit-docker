@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y \
     zlib1g-dev \
     libluajit-5.1-dev \
     cmake \
+    pkg-config \
     ninja-build \
     libgit2-dev \
     && rm -rf /var/lib/apt/lists/*
