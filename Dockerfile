@@ -44,7 +44,6 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     && apt-get update && apt-get install -y \
     fcgiwrap \
     git \
-    git-daemon-sysvinit \
     groff \
     python3 \
     python3-pip \
@@ -52,7 +51,6 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     python3-markdown \
     libluajit-5.1-2 \
     lua-http \
-    mime-support \
     gitolite3 \
     openssh-server \
     sudo \
