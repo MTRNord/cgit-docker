@@ -9,10 +9,7 @@ mkdir -p /run/cgit/
 chown -R ${CGIT_APP_USER}:${CGIT_APP_USER} /opt/cgit/ \
                      /run/cgit/
 
-chmod 770 /opt/cgit/ \
-          /opt/cgit/filters/ \
-          /opt/cgit/app/ \
-          /opt/cgit/cache/
+chmod -R 770 /opt/cgit/
 
 chmod u+x /opt/cgit/bin/cgit
 
