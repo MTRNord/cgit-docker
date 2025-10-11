@@ -1,5 +1,5 @@
 ARG DEBIAN_VERSION=bookworm
-ARG CGIT_VERSION=fd2db11024256d37076540786022f2fcd1654141
+ARG CGIT_VERSION=724e902ac72b69c47292fa8e5b01df2ae9c6d936
 ARG NGINX_VERSION=1.29.1
 
 FROM debian:${DEBIAN_VERSION} AS build
@@ -17,6 +17,9 @@ RUN apt-get update && apt-get install -y \
     libssl-dev \
     zlib1g-dev \
     libluajit-5.1-dev \
+    cmake \
+    ninja \
+    libgit2-dev \
     && rm -rf /var/lib/apt/lists/*
 
 
@@ -26,7 +29,7 @@ RUN git clone https://git.midnightthoughts.space/cgit . \
  && git submodule update --init --recursive
 
 COPY ["cgit_build.conf", "/opt/cgit-repo/cgit.conf"]
-RUN make && make install
+RUN cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/cgit
 
 
 FROM nginx:${NGINX_VERSION}-bookworm
@@ -53,6 +56,7 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     curl \
     nano \
     wget \
+    libgit2-1.5 \
     && rm -rf /var/lib/apt/lists/* \
     && ln -sf python3 /usr/bin/python \
     && python3 -m pip install --break-system-packages rst2html \
