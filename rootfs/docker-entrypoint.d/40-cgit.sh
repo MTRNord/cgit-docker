@@ -9,15 +9,9 @@ echo "Starting cgit FastCGI daemon..."
 mkdir -p "$SOCKET_DIR"
 chown ${CGIT_APP_USER}:${CGIT_APP_USER} "$SOCKET_DIR"
 
-# Remove previous socket if exists
-if [ -e "$SOCKET_PATH" ]; then
-    echo "Removing previous socket: $SOCKET_PATH"
-    rm "$SOCKET_PATH"
-fi
-
 echo "Starting cgit with socket at $SOCKET_PATH..."
 # Start cgit as native FastCGI daemon
-su ${CGIT_APP_USER} -s /bin/sh -c "/opt/cgit/bin/cgit --fastcgi --socket $SOCKET_PATH &"
+su ${CGIT_APP_USER} -s /bin/sh -c "/opt/cgit/bin/cgit &"
 
 # Wait for socket to be created
 echo "Waiting for cgit to create socket..."
