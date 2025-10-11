@@ -31,7 +31,8 @@ RUN git clone https://git.midnightthoughts.space/cgit . \
  && git submodule update --init --recursive
 
 COPY ["cgit_build.conf", "/opt/cgit-repo/cgit.conf"]
-RUN cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/cgit
+RUN cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/opt/cgit && \
+    cmake --build build --target install
 
 
 FROM nginx:${NGINX_VERSION}-bookworm
