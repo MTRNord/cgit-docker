@@ -1,4 +1,4 @@
-ARG DEBIAN_VERSION=bookworm
+ARG DEBIAN_VERSION=trixie
 ARG CGIT_VERSION=724e902ac72b69c47292fa8e5b01df2ae9c6d936
 ARG NGINX_VERSION=1.29.1
 
@@ -35,7 +35,7 @@ RUN cmake -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_INSTALL_PREFIX=/o
     cmake --build build --target install
 
 
-FROM nginx:${NGINX_VERSION}-bookworm
+FROM nginx:${NGINX_VERSION}-${DEBIAN_VERSION}
 
 
 # mailcap - provides /etc/mime.types
