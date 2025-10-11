@@ -3,7 +3,8 @@ name: Build and Push Docker Image
 on:
   push:
     branches:
-      - main
+    # Any push to any branch
+      - '**'
     tags:
       - 'v*'
   pull_request:
