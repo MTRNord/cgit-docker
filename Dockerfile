@@ -40,6 +40,7 @@ RUN echo 'gitolite3 gitolite3/adminkey string' | debconf-set-selections \
     git \
     git-daemon-sysvinit \
     groff \
+    cron \
     python3 \
     python3-pip \
     python3-pygments \
