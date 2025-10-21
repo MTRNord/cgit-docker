@@ -35,6 +35,7 @@ else
 fi
 
 cp /etc/gitolite3/.gitolite.rc "$GITOLITE_HOME/.gitolite.rc"
+chown -R $GITOLITE_USER /var/lib/gitolite3/.gitolite/logs
 su -s /bin/sh $GITOLITE_USER -c "gitolite compile"
 
 # Ensure projects.list is readable by nginx (for cgit)
