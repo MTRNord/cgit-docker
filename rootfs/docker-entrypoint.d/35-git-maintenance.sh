@@ -17,7 +17,7 @@ for base in $REPO_PATHS; do
             [ -e "$repo" ] || continue
             # Run git maintenance start as gitolite3 so per-repo timers are created under the correct user
             echo "Starting git maintenance for: $repo"
-            su -s /bin/sh $GITUSER -c "git -C '$repo' maintenance start --quiet" || \
+            su -s /bin/sh $GITUSER -c "git -C '$repo' maintenance start" || \
                 echo "git maintenance start failed for $repo"
         done
     fi
